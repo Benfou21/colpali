@@ -87,7 +87,7 @@ class ColModelTraining:
             max_length=self.config.max_length,
         )
 
-    def train(self) -> None:
+    def train(self,compute_metrics: Optional[Callable] = None, callbacks : Optional[List] = None) -> None:  # modification : added compute_metrics
         trainer = ContrastiveTrainer(
             model=self.model,
             train_dataset=self.train_dataset,
@@ -96,6 +96,8 @@ class ColModelTraining:
             data_collator=self.collator,
             loss_func=self.config.loss_func,
             is_vision_model=self.config.processor is not None,
+            compute_metrics=compute_metrics,
+            callbacks = callbacks
         )
 
         trainer.args.remove_unused_columns = False

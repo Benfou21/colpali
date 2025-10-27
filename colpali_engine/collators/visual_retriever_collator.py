@@ -69,8 +69,8 @@ class VisualRetrieverCollator:
 
             neg_tgt = example.get(ColPaliEngineDataset.NEG_TARGET_KEY, None)
             if neg_tgt is not None:
-                sampled_neg = random.choice(neg_tgt) if isinstance(neg_tgt, list) else neg_tgt
-                neg_targets.append(sampled_neg)
+                #sampled_neg = random.choice(neg_tgt) if isinstance(neg_tgt, list) else neg_tgt
+                neg_targets.extend(neg_tgt)  #Modification : extend so we flatten each list for efficient computation + we use all neg given
 
         # Ensure all queries are strings or images.
         assert all(isinstance(q, str) for q in queries), (
