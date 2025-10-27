@@ -77,6 +77,7 @@ class ColPaliEngineDataset(Dataset):
         query_column_name: str = "query",
         pos_target_column_name: str = "pos_target",
         neg_target_column_name: str = None,
+        num_negatives: int = 4, # NEW for multiple negatives
     ):
         """
         Initialize the dataset with the provided data and external document corpus.
@@ -88,6 +89,7 @@ class ColPaliEngineDataset(Dataset):
         """
         self.data = data
         self.corpus = corpus
+        self.num_negatives = num_negatives
 
         # Column args
         self.query_column_name = query_column_name
@@ -131,8 +133,8 @@ class ColPaliEngineDataset(Dataset):
             pos_targets = [self.corpus.retrieve(doc_id) for doc_id in pos_targets]
             if neg_targets is not None:
                 # to avoid oveflowing CPU memory
-                if len(neg_targets) > 5:
-                    neg_targets = random.sample(neg_targets, 5)
+                if len(neg_targets) > self.num_negatives:
+                    neg_targets = random.sample(neg_targets, self.num_negatives)
                 neg_targets = [self.corpus.retrieve(doc_id) for doc_id in neg_targets]
 
         return {
